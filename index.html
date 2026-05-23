@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life of Aditya & Sruuu ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--red:#E50914;--dark:#141414;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#fff;font-family:'Montserrat',sans-serif;}
+
+/* ─── SCREENS ─────────────────────────────────── */
+.screen{
+  position:fixed;inset:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.screen.active{display:flex;}
+
+/* fade overlay for transitions */
+#fade{
+  position:fixed;inset:0;z-index:999;
+  background:#000;opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+}
+#fade.dark{opacity:1;pointer-events:all;}
+
+
+/* ════════════════════════════════════════════════
+   SCREEN 1 — INTRO VIDEO
+════════════════════════════════════════════════ */
+#sc-intro{background:#000;}
+#intro-video{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+}
+
+
+/* ════════════════════════════════════════════════
+   SCREEN 2 — WHO'S WATCHING
+════════════════════════════════════════════════ */
+#sc-profiles{
+  background:#000;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Animated mosaic BG */
+.prof-bg{
+  position:absolute;inset:-40px;
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  grid-template-rows:repeat(5,1fr);
+  gap:4px;
+  filter:blur(2px);
+  opacity:.28;
+  transform:scale(1.05);
+}
+.prof-bg-tile{
+  border-radius:3px;
+  background:var(--c);
+  animation:tilePulse var(--d) ease-in-out infinite var(--dl);
+}
+@keyframes tilePulse{
+  0%,100%{opacity:.4;transform:scale(.97);}
+  50%{opacity:1;transform:scale(1.02);}
+}
+.prof-vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.6) 0%,rgba(0,0,0,.95) 70%);
+}
+
+/* Content */
+.prof-content{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;
+  align-items:center;gap:60px;
+}
+.prof-title{
+  font-size:clamp(30px,3.8vw,52px);
+  font-weight:400;letter-spacing:1px;color:#fff;
+}
+.prof-grid{
+  display:flex;gap:28px;
+  align-items:flex-end;
+  justify-content:center;
+}
+.prof-card{
+  display:flex;flex-direction:column;
+  align-items:center;gap:14px;
+  cursor:pointer;
+  transition:transform .3s cubic-bezier(.25,.46,.45,.94);
+}
+.prof-card:hover{transform:translateY(-8px) scale(1.05);}
+.prof-card:hover .prof-img{outline-color:#fff;}
+.prof-img{
+  border-radius:8px;overflow:hidden;
+  outline:3px solid transparent;
+  transition:outline-color .25s;
+  position:relative;
+  background:#1f1f1f;
+  box-shadow:0 10px 40px rgba(0,0,0,.7);
+  flex-shrink:0;
+}
+.prof-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.prof-img-ph{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:8px;
+}
+.prof-img-ph span{font-size:2.2em;opacity:.2;}
+.prof-img-ph p{font-size:9px;color:#555;letter-spacing:2px;text-transform:uppercase;}
+.prof-img-label{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.9));
+  text-align:center;font-size:11px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:24px 8px 8px;
+}
+.prof-name{
+  font-size:15px;font-weight:500;
+  color:#808080;letter-spacing:.5px;
+  transition:color .2s;
+}
+.prof-card:hover .prof-name{color:#fff;}
+.prof-name.active-name{color:#fff;font-weight:700;}
+
+.prof-manage{
+  background:transparent;
+  border:1px solid #5a5a5a;
+  color:#808080;
+  padding:11px 34px;
+  font-size:13px;letter-spacing:3px;
+  text-transform:uppercase;
+  font-family:'Montserrat',sans-serif;
+  font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.prof-manage:hover{border-color:#fff;color:#fff;}
+
+
+/* ════════════════════════════════════════════════
+   SCREEN 3 — BROWSE
+════════════════════════════════════════════════ */
+#sc-browse{
+  display:none;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:none;
+}
+#sc-browse::-webkit-scrollbar{display:none;}
+#sc-browse.active{display:flex;}
+
+/* NAV */
+.nf-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:70px;
+  display:flex;align-items:center;
+  padding:0 56px;gap:28px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent);
+  transition:background .4s;
+}
+.nf-nav.scrolled{background:rgba(20,20,20,.97);}
+.nf-logo{
+  flex-shrink:0;
+}
+.nf-logo svg{width:100px;height:auto;display:block;}
+.nf-links{
+  display:flex;gap:18px;list-style:none;
+}
+.nf-links li{
+  font-size:13px;font-weight:500;
+  color:#e5e5e5;cursor:pointer;
+  transition:color .15s;white-space:nowrap;
+}
+.nf-links li:first-child{font-weight:700;color:#fff;}
+.nf-links li:hover{color:#b3b3b3;}
+.nf-nav-right{
+  margin-left:auto;display:flex;align-items:center;gap:16px;
+}
+.nf-days{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(229,9,20,.12);
+  border:1px solid rgba(229,9,20,.35);
+  border-radius:4px;padding:6px 16px;
+}
+.nf-days-n{
+  font-size:26px;font-weight:800;
+  color:var(--red);line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.nf-days-t{
+  font-size:9px;color:#777;
+  text-transform:uppercase;letter-spacing:2px;
+  line-height:1.5;
+}
+
+/* HERO */
+.nf-hero{
+  width:100%;
+  height:96vh;
+  min-height:580px;
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+  padding:0 56px 80px;
+  flex-shrink:0;
+}
+.hero-bg{
+  position:absolute;inset:0;overflow:hidden;
+  background:linear-gradient(135deg,#0d0005 0%,#1a0015 20%,#2a0a30 40%,#150a20 60%,#050510 80%,#000 100%);
+}
+/* add your photo: uncomment below and set src */
+/* .hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5;} */
+
+/* floating orbs */
+.orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px);}
+.orb1{width:55%;height:70%;top:-10%;right:-5%;background:radial-gradient(ellipse,rgba(160,20,100,.45),transparent 65%);animation:orbf 9s ease-in-out infinite;}
+.orb2{width:40%;height:50%;bottom:-5%;right:20%;background:radial-gradient(ellipse,rgba(229,9,20,.18),transparent 65%);animation:orbf 12s ease-in-out infinite 3s reverse;}
+.orb3{width:30%;height:40%;top:30%;right:35%;background:radial-gradient(ellipse,rgba(80,10,60,.3),transparent 65%);animation:orbf 7s ease-in-out infinite 1s;}
+@keyframes orbf{0%,100%{transform:translate(0,0)scale(1);}50%{transform:translate(20px,-25px)scale(1.08);}}
+
+.hero-grad{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,rgba(0,0,0,.96) 0%,rgba(0,0,0,.65) 45%,rgba(0,0,0,.05) 75%),
+    linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 45%),
+    linear-gradient(to bottom,rgba(0,0,0,.4) 0%,transparent 18%);
+}
+.hero-content{
+  position:relative;z-index:2;
+  max-width:580px;
+  animation:heroIn .8s ease both;
+}
+@keyframes heroIn{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+.hero-series{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:14px;
+}
+.hero-n-badge{
+  font-size:12px;font-weight:900;
+  color:var(--red);letter-spacing:4px;
+}
+.hero-series-lbl{
+  font-size:12px;letter-spacing:3px;
+  color:#ccc;font-weight:300;text-transform:uppercase;
+}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(54px,7.5vw,110px);
+  line-height:.88;font-weight:700;
+  color:#fff;margin-bottom:20px;
+  text-shadow:2px 4px 30px rgba(0,0,0,.8);
+  letter-spacing:-1px;
+}
+.hero-title em{color:var(--red);font-style:italic;}
+
+.hero-meta{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;margin-bottom:18px;flex-wrap:wrap;
+}
+.meta-match{color:#46d369;font-weight:700;font-size:14px;}
+.meta-pill{
+  border:1px solid rgba(255,255,255,.4);
+  color:#ccc;padding:2px 8px;font-size:11px;
+  border-radius:2px;font-weight:600;
+}
+
+.hero-desc{
+  font-size:15px;line-height:1.8;
+  color:#ddd;font-weight:300;
+  margin-bottom:28px;max-width:460px;
+}
+.hero-desc strong{color:#fff;font-weight:600;}
+
+.hero-btns{display:flex;gap:12px;}
+.btn-play{
+  display:flex;align-items:center;gap:9px;
+  background:#fff;color:#000;border:none;
+  padding:12px 32px;font-size:17px;font-weight:700;
+  border-radius:4px;cursor:pointer;
+  font-family:'Montserrat',sans-serif;
+  transition:background .15s;
+  letter-spacing:.3px;
+}
+.btn-play:hover{background:rgba(255,255,255,.8);}
+.btn-more{
+  display:flex;align-items:center;gap:9px;
+  background:rgba(109,109,110,.65);color:#fff;border:none;
+  padding:12px 28px;font-size:17px;font-weight:700;
+  border-radius:4px;cursor:pointer;
+  font-family:'Montserrat',sans-serif;
+  transition:background .15s;
+}
+.btn-more:hover{background:rgba(109,109,110,.4);}
+
+/* ROWS */
+.nf-rows{
+  background:var(--dark);
+  padding:16px 0 100px;
+  flex-shrink:0;
+}
+.nf-row{
+  padding:0 56px;
+  margin-bottom:40px;
+}
+.row-head{
+  font-size:18px;font-weight:700;
+  color:#e5e5e5;margin-bottom:10px;
+  display:flex;align-items:center;gap:10px;
+}
+.row-more{
+  font-size:12px;color:#54b9c5;
+  font-weight:600;letter-spacing:1px;
+  cursor:pointer;opacity:0;transition:opacity .2s;
+  display:flex;align-items:center;gap:3px;
+}
+.nf-row:hover .row-more{opacity:1;}
+
+.row-strip{
+  display:flex;gap:5px;
+  overflow-x:auto;padding:8px 0 14px;
+  scrollbar-width:none;
+}
+.row-strip::-webkit-scrollbar{display:none;}
+
+/* 16:9 card */
+.nf-card{
+  flex-shrink:0;
+  width:clamp(160px,15vw,230px);
+  aspect-ratio:16/9;
+  border-radius:4px;overflow:hidden;
+  background:#222;cursor:pointer;
+  position:relative;
+  transition:transform .3s cubic-bezier(.25,.46,.45,.94),
+             box-shadow .3s,z-index 0s;
+}
+.nf-card:hover{
+  transform:scale(1.1);
+  box-shadow:0 14px 40px rgba(0,0,0,.8);
+  z-index:5;
+}
+.nf-card:first-child:hover{transform-origin:left center;}
+.nf-card:last-child:hover{transform-origin:right center;}
+.nf-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.nf-card-ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:5px;
+  background:linear-gradient(135deg,#1a1a1a,#2a2a2a);
+}
+.nf-card-ph .ci{font-size:22px;opacity:.2;}
+.nf-card-ph .ct{font-size:9px;color:#444;letter-spacing:2px;text-transform:uppercase;}
+.card-shade{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.85),transparent 55%);
+  opacity:0;transition:opacity .3s;
+}
+.nf-card:hover .card-shade{opacity:1;}
+.card-title{
+  position:absolute;bottom:8px;left:10px;right:10px;
+  font-size:12px;font-weight:700;line-height:1.3;
+  opacity:0;transform:translateY(5px);
+  transition:opacity .3s,transform .3s;
+}
+.nf-card:hover .card-title{opacity:1;transform:translateY(0);}
+.nf-card.hl{outline:2px solid var(--red);outline-offset:-2px;}
+
+/* square card */
+.sq-card{
+  flex-shrink:0;width:170px;height:170px;
+  border-radius:6px;overflow:hidden;
+  cursor:pointer;position:relative;
+  transition:transform .28s cubic-bezier(.25,.46,.45,.94),box-shadow .28s;
+}
+.sq-card:hover{transform:scale(1.08);box-shadow:0 12px 35px rgba(0,0,0,.75);z-index:5;}
+.sq-inner{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;padding:16px;text-align:center;
+}
+.sq-icon{font-size:36px;}
+.sq-title{font-size:13px;font-weight:700;line-height:1.35;}
+.sq-sub{font-size:10px;color:#aaa;}
+
+/* reason pill */
+.rpill{
+  flex-shrink:0;
+  background:rgba(35,5,5,.9);
+  border:1px solid rgba(120,20,20,.4);
+  border-radius:4px;
+  padding:10px 20px;
+  font-size:13px;color:#e0cbcb;
+  font-weight:400;white-space:nowrap;
+  cursor:default;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.rpill:hover{background:rgba(70,10,10,.9);border-color:#8b2020;transform:scale(1.04);}
+
+
+/* ════════════════════════════════════════════════
+   SCREEN 4 — POEM
+════════════════════════════════════════════════ */
+#sc-poem{background:#000;position:relative;overflow:hidden;}
+
+.poem-stars{position:absolute;inset:0;pointer-events:none;}
+.pstar{
+  position:absolute;background:#fff;border-radius:50%;
+  animation:twinkle var(--d) ease-in-out infinite var(--dl);
+}
+@keyframes twinkle{
+  0%,100%{opacity:.07;transform:scale(.5);}
+  50%{opacity:.95;transform:scale(1.5);}
+}
+.poem-floats{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+.pheart{
+  position:absolute;font-size:var(--s);
+  animation:floatup var(--d) linear infinite var(--dl);
+  opacity:0;
+}
+@keyframes floatup{
+  0%{transform:translateY(110vh);opacity:0;}
+  8%{opacity:.65;}
+  88%{opacity:.08;}
+  100%{transform:translateY(-10vh) rotate(20deg);opacity:0;}
+}
+
+.poem-back-btn{
+  position:absolute;top:22px;left:22px;z-index:10;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  color:#bbb;padding:8px 20px;
+  cursor:pointer;border-radius:4px;
+  font-size:12px;font-family:'Montserrat',sans-serif;
+  font-weight:600;letter-spacing:1px;
+  transition:all .2s;
+}
+.poem-back-btn:hover{background:rgba(255,255,255,.14);color:#fff;}
+
+.poem-inner{
+  position:relative;z-index:2;
+  max-width:700px;text-align:center;
+  padding:60px 40px;
+  max-height:100vh;overflow-y:auto;scrollbar-width:none;
+}
+.poem-inner::-webkit-scrollbar{display:none;}
+.poem-for{
+  font-size:10px;letter-spacing:6px;
+  color:var(--red);text-transform:uppercase;
+  font-weight:700;margin-bottom:10px;
+}
+.poem-heading{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(38px,5vw,66px);
+  color:#fff;font-weight:700;letter-spacing:1px;
+}
+.poem-line{
+  width:52px;height:2px;background:var(--red);
+  margin:20px auto 30px;border-radius:2px;
+}
+/* ─── PASTE YOUR POEM HERE ─────────────────────
+   Replace .poem-placeholder with:
+   <p class="poem-body">
+     Line one,<br>
+     Line two,<br>
+     <br>
+     New stanza line.<br>
+   </p>
+──────────────────────────────────────────────── */
+.poem-body{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(17px,2.1vw,23px);
+  line-height:2.3;color:#eee;
+  font-style:italic;font-weight:400;
+}
+.poem-placeholder{
+  font-family:'Montserrat',sans-serif;
+  font-style:normal;color:#333;
+  font-size:14px;border:1px dashed #222;
+  padding:36px 28px;border-radius:8px;line-height:2;
+  font-weight:400;
+}
+.poem-sig{
+  margin-top:36px;font-size:15px;
+  color:#555;font-style:italic;
+  font-family:'Playfair Display',serif;
+}
+.poem-music{
+  margin-top:28px;padding-top:22px;
+  border-top:1px solid #1a1a1a;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:12px;color:#3a3a3a;
+}
+.music-chip{
+  background:rgba(229,9,20,.08);
+  border:1px solid rgba(229,9,20,.2);
+  padding:3px 14px;border-radius:12px;
+  color:#666;font-size:11px;
+}
+
+
+/* ════════════════════════════════════════════════
+   SCREEN 5 — CREDITS
+════════════════════════════════════════════════ */
+#sc-credits{
+  background:#000;
+  overflow-y:auto;scrollbar-width:none;
+  align-items:flex-start;justify-content:flex-start;
+}
+#sc-credits::-webkit-scrollbar{display:none;}
+#sc-credits.active{display:flex;}
+
+.credits-back-btn{
+  position:fixed;top:22px;left:22px;z-index:10;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  color:#bbb;padding:8px 20px;
+  cursor:pointer;border-radius:4px;
+  font-size:12px;font-family:'Montserrat',sans-serif;
+  font-weight:600;letter-spacing:1px;
+  transition:all .2s;
+}
+.credits-back-btn:hover{background:rgba(255,255,255,.14);color:#fff;}
+
+.credits-wrap{
+  display:flex;align-items:flex-start;gap:80px;
+  padding:110px 100px 80px;min-height:100vh;
+}
+.credits-thumb{
+  flex-shrink:0;width:230px;
+  border-radius:8px;overflow:hidden;
+  box-shadow:0 14px 50px rgba(0,0,0,.7);
+}
+.credits-thumb img{width:100%;display:block;}
+.credits-thumb-ph{
+  width:230px;height:310px;background:#111;
+  border-radius:8px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;color:#2a2a2a;
+  box-shadow:0 14px 50px rgba(0,0,0,.7);
+}
+.credits-thumb-ph span{font-size:40px;opacity:.25;}
+
+.credits-info{}
+.cred-badge{
+  font-size:10px;color:var(--red);
+  letter-spacing:4px;text-transform:uppercase;
+  font-weight:700;margin-bottom:12px;
+}
+.cred-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,3.5vw,46px);
+  color:#fff;font-weight:700;margin-bottom:40px;
+}
+.cred-table{width:100%;border-collapse:collapse;}
+.cred-table tr{border-bottom:1px solid rgba(255,255,255,.05);}
+.cred-table tr:last-child{border:none;}
+.cred-table td{padding:12px 0;font-size:15px;vertical-align:top;}
+.cred-table td:first-child{
+  width:210px;color:#666;
+  text-align:right;padding-right:28px;
+  font-weight:400;white-space:nowrap;
+}
+.cred-table td:last-child{color:#e5e5e5;font-weight:300;}
+.cred-status{color:#46d369!important;font-weight:600!important;}
+</style>
+</head>
+<body>
+
+<!-- fade overlay -->
+<div id="fade"></div>
+
+<!-- ══════ SCREEN 1 — INTRO ══════ -->
+<div id="sc-intro" class="screen active">
+  <video id="intro-video" src="intro.mp4"
+    autoplay muted playsinline preload="auto"
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+  </video>
+</div>
+
+<!-- ══════ SCREEN 2 — WHO'S WATCHING ══════ -->
+<div id="sc-profiles" class="screen">
+  <div class="prof-bg" id="prof-bg"></div>
+  <div class="prof-vignette"></div>
+  <div class="prof-content">
+    <h1 class="prof-title">Who's Watching?</h1>
+    <div class="prof-grid" id="prof-grid"></div>
+    <button class="prof-manage">Manage Profiles</button>
+  </div>
+</div>
+
+<!-- ══════ SCREEN 3 — BROWSE ══════ -->
+<div id="sc-browse" class="screen">
+
+  <nav class="nf-nav" id="nf-nav">
+    <!-- Real Netflix SVG logo -->
+    <div class="nf-logo">
+      <svg viewBox="0 0 111 30" xmlns="http://www.w3.org/2000/svg">
+        <path d="M105.06 14.28l5.94 15.72h-5.3l-3.5-9.5-3.49 9.5h-5.3l5.94-15.72L93.82 0h5.3l3.08 8.28L105.28 0h5.3L105.06 14.28zM80.3 0v25.82h14.87v4.18H74.92V0H80.3zM61.14 4.18V30h-5.38V4.18H48.2V0h20.5v4.18H61.14zM39.38 17.09V30H34V0h5.38v12.91h9.88V0h5.38v30h-5.38V17.09H39.38zM22.44 30L9.58 9.08V30H4.2V0h5.55l12.86 20.92V0h5.38v30H22.44z" fill="#E50914"/>
+      </svg>
+    </div>
+    <ul class="nf-links">
+      <li>Home</li><li>TV Shows</li><li>Movies</li>
+      <li>New &amp; Popular</li><li>My List</li><li>Browse by Languages</li>
+    </ul>
+    <div class="nf-nav-right">
+      <div class="nf-days">
+        <div class="nf-days-n" id="days-count">—</div>
+        <div class="nf-days-t">Days<br>Together</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="nf-hero">
+    <div class="hero-bg">
+      <!-- Uncomment to add your photo:
+      <img src="cover.jpg" alt="Aditya & Sruuu"> -->
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+    </div>
+    <div class="hero-grad"></div>
+    <div class="hero-content">
+      <div class="hero-series">
+        <span class="hero-n-badge">N</span>
+        <span class="hero-series-lbl">Series</span>
+      </div>
+      <div class="hero-title">
+        Life of<br><em>Aditya</em><br>&amp; Sruuu
+      </div>
+      <div class="hero-meta">
+        <span class="meta-match">💕 100% Match</span>
+        <span style="color:#bcbcbc">2024</span>
+        <span class="meta-pill">13+</span>
+        <span style="color:#bcbcbc">6 Seasons</span>
+        <span class="meta-pill">HD</span>
+      </div>
+      <p class="hero-desc">
+        A heartwarming, laugh-out-loud, deeply emotional story of two souls who chose each other every day.
+        Starring <strong>Aditya &amp; Srushti</strong> — written by love, directed by fate.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-play" onclick="go('sc-poem')">▶ &nbsp;Play</button>
+        <button class="btn-more" onclick="go('sc-credits')">ℹ &nbsp;More Info</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content rows -->
+  <div class="nf-rows">
+
+    <div class="nf-row">
+      <div class="row-head">
+        📸 Popular on Netflix
+        <span class="row-more">Explore All ›</span>
+      </div>
+      <div class="row-strip" id="row-popular"></div>
+    </div>
+
+    <div class="nf-row">
+      <div class="row-head">
+        🎬 Recently Watched Together
+        <span class="row-more">Explore All ›</span>
+      </div>
+      <div class="row-strip" id="row-recent"></div>
+    </div>
+
+    <div class="nf-row">
+      <div class="row-head">🎵 Our Soundtrack</div>
+      <div class="row-strip" id="row-songs"></div>
+    </div>
+
+    <div class="nf-row">
+      <div class="row-head">💌 Why I Love You, Sruuu</div>
+      <div class="row-strip" id="row-reasons"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════ SCREEN 4 — POEM ══════ -->
+<div id="sc-poem" class="screen">
+  <div class="poem-stars" id="poem-stars"></div>
+  <div class="poem-floats" id="poem-floats"></div>
+  <button class="poem-back-btn" onclick="go('sc-browse')">← Back</button>
+  <div class="poem-inner">
+    <div class="poem-for">For Sruuu, with everything I have</div>
+    <div class="poem-heading">A Poem For You</div>
+    <div class="poem-line"></div>
+
+    <!-- ════════════════════════════════════════════
+         ADITYA — YOUR POEM GOES HERE ✍️
+         Delete .poem-placeholder and replace with:
+
+         <p class="poem-body">
+           Your first line,<br>
+           Your second line,<br>
+           <br>
+           Next stanza here.<br>
+         </p>
+    ════════════════════════════════════════════ -->
+    <div class="poem-placeholder">
+      ✍️ &nbsp;<strong style="color:#3a3a3a">Aditya's poem will appear here.</strong><br><br>
+      Find the comment <em style="color:#2e2e2e">"ADITYA — YOUR POEM GOES HERE"</em><br>
+      in the code and replace this block. 💕
+    </div>
+
+    <div class="poem-sig">— Aditya, forever yours 🌹</div>
+    <div class="poem-music">
+      <span>🎵</span>
+      <span>Now playing</span>
+      <span class="music-chip">Dooron Dooron — Unplugged</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SCREEN 5 — CREDITS ══════ -->
+<div id="sc-credits" class="screen">
+  <button class="credits-back-btn" onclick="go('sc-browse')">← Back</button>
+  <div class="credits-wrap">
+    <div class="credits-thumb-ph">
+      <!-- Replace with: <div class="credits-thumb"><img src="photo.jpg"></div> -->
+      <span>📸</span>
+      <p style="font-size:11px;letter-spacing:1px;">Add your photo</p>
+    </div>
+    <div class="credits-info">
+      <div class="cred-badge">N Series · Episode 6</div>
+      <div class="cred-title">Life of Aditya &amp; Sruuu</div>
+      <table class="cred-table">
+        <tr><td>Directed by</td><td>God</td></tr>
+        <tr><td>Cast</td><td></td></tr>
+        <tr><td>Boyfriend</td><td>Aditya</td></tr>
+        <tr><td>Girlfriend</td><td>Srushti &nbsp;(Sruuu) 💕</td></tr>
+        <tr><td>Written by</td><td>Fate &amp; destiny</td></tr>
+        <tr><td>Produced by</td><td>Patience &amp; support</td></tr>
+        <tr><td>Soundtrack</td><td>Dooron Dooron — Unplugged</td></tr>
+        <tr><td>Director of Photography</td><td>Our camera rolls</td></tr>
+        <tr><td>Location</td><td>Wherever we are together</td></tr>
+        <tr><td>Started</td><td>7th December 2024</td></tr>
+        <tr><td>Status</td><td class="cred-status">Ongoing · 6 months &amp; counting ❤️</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── NAVIGATION ─────────────────────────────────
+   Simple, reliable: show/hide with display + fade overlay
+──────────────────────────────────────────────── */
+const fadeEl = document.getElementById('fade');
+
+function go(targetId) {
+  // Fade to black
+  fadeEl.classList.add('dark');
+  setTimeout(() => {
+    // Hide all screens
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    // Show target
+    document.getElementById(targetId).classList.add('active');
+    // Fade back in
+    setTimeout(() => fadeEl.classList.remove('dark'), 60);
+  }, 500);
+}
+
+/* ── INTRO ─────────────────────────────────────── */
+const introVid = document.getElementById('intro-video');
+
+introVid.addEventListener('ended', () => go('sc-profiles'));
+
+introVid.addEventListener('error', () => go('sc-profiles'));
+
+// Fallback if video doesn't fire 'ended'
+introVid.addEventListener('loadedmetadata', () => {
+  const dur = introVid.duration;
+  if (dur && isFinite(dur)) {
+    setTimeout(() => {
+      if (document.getElementById('sc-intro').classList.contains('active')) {
+        go('sc-profiles');
+      }
+    }, (dur + 0.3) * 1000);
+  }
+});
+
+// Hard fallback after 10s
+setTimeout(() => {
+  if (document.getElementById('sc-intro').classList.contains('active')) {
+    go('sc-profiles');
+  }
+}, 10000);
+
+/* ── NAVBAR SCROLL ──────────────────────────────── */
+document.getElementById('sc-browse').addEventListener('scroll', function() {
+  document.getElementById('nf-nav').classList.toggle('scrolled', this.scrollTop > 60);
+});
+
+/* ── DAYS COUNTER ───────────────────────────────── */
+const startDate = new Date('2024-12-07');
+const diffMs = new Date() - startDate;
+const diffDays = Math.max(0, Math.floor(diffMs / 86400000));
+document.getElementById('days-count').textContent = diffDays;
+
+/* ── PROFILE BG MOSAIC ──────────────────────────── */
+const bgEl = document.getElementById('prof-bg');
+const cols = ['#1a0000','#200010','#0a0a1a','#001020','#0a1a0a',
+              '#1a1000','#200820','#0a1820','#18000a','#080018'];
+for (let i = 0; i < 40; i++) {
+  const t = document.createElement('div');
+  t.className = 'prof-bg-tile';
+  const col = cols[i % cols.length];
+  const dur = (Math.random() * 6 + 8).toFixed(1) + 's';
+  const dl  = '-' + (Math.random() * 10).toFixed(1) + 's';
+  t.style.cssText = `--c:${col};--d:${dur};--dl:${dl};`;
+  bgEl.appendChild(t);
+}
+
+/* ── PROFILES ───────────────────────────────────── */
+// To add photos: change photo: null → photo: 'filename.jpg'
+const profiles = [
+  { label: '1 Month',     size: 158, photo: null },
+  { label: '3 Months',    size: 178, photo: null },
+  { label: '5 Months',    size: 200, photo: null },
+  { label: '6 Months ✨', size: 224, photo: null, hot: true },
+];
+const profGrid = document.getElementById('prof-grid');
+profiles.forEach(p => {
+  const wrap = document.createElement('div');
+  wrap.className = 'prof-card';
+  wrap.onclick = () => go('sc-browse');
+  const hl = p.hot
+    ? 'outline:3px solid var(--red);box-shadow:0 0 28px rgba(229,9,20,.45);'
+    : '';
+  wrap.innerHTML = `
+    <div class="prof-img" style="width:${p.size}px;height:${p.size}px;${hl}">
+      ${p.photo
+        ? `<img src="${p.photo}" alt="${p.label}">`
+        : `<div class="prof-img-ph"><span>📸</span><p>Add photo</p></div>`}
+      <div class="prof-img-label" style="${p.hot?'color:var(--red);font-size:12px;':''}">${p.label}</div>
+    </div>
+    <div class="prof-name ${p.hot?'active-name':''}">${p.label}</div>`;
+  profGrid.appendChild(wrap);
+});
+
+/* ── CARD BUILDER ───────────────────────────────── */
+function makeCard(label, photo, hl) {
+  const d = document.createElement('div');
+  d.className = 'nf-card' + (hl ? ' hl' : '');
+  d.innerHTML = photo
+    ? `<img src="${photo}" alt="${label}">
+       <div class="card-shade"></div>
+       <div class="card-title">${label}</div>`
+    : `<div class="nf-card-ph">
+         <div class="ci">📸</div>
+         <div class="ct">Add photo</div>
+       </div>
+       <div class="card-shade"></div>
+       <div class="card-title">${label}</div>`;
+  return d;
+}
+
+/* ── POPULAR ROW ────────────────────────────────── */
+[
+  {l:'Day We Met 💫'}, {l:'First Smile 🥰'}, {l:'1 Month 🎉'},
+  {l:'Adventures 🌍'}, {l:'Silly Us 😂'}, {l:'3 Months 🌸'},
+  {l:'5 Months 🌟'}, {l:'6 Months ❤️', hl:true},
+].forEach(c => document.getElementById('row-popular').appendChild(makeCard(c.l, c.photo||null, c.hl)));
+
+/* ── RECENT ROW ─────────────────────────────────── */
+[
+  {l:'Late Night Talks 🌃'},{l:'Coffee Date ☕'},
+  {l:'A Night In 🌙'},{l:'Road Trip 🚗'},
+  {l:'Just Us 💕'},{l:'Secret Moments 🤫'},
+].forEach(c => document.getElementById('row-recent').appendChild(makeCard(c.l, null, false)));
+
+/* ── SONGS ROW ──────────────────────────────────── */
+[
+  {title:'Dooron Dooron\nUnplugged', sub:'♥ Our Song', icon:'🎵',
+   bg:'linear-gradient(135deg,#1a0000,#3d0000,#120000)', fn: ()=>go('sc-poem')},
+  {title:'Add a Song', sub:'Our playlist', icon:'🎶', bg:'linear-gradient(135deg,#00101a,#003328)'},
+  {title:'Add a Song', sub:'Our playlist', icon:'🎸', bg:'linear-gradient(135deg,#1a0800,#2b1600)'},
+  {title:'Add a Song', sub:'Our playlist', icon:'🌙', bg:'linear-gradient(135deg,#080018,#160030)'},
+].forEach(s => {
+  const d = document.createElement('div');
+  d.className = 'sq-card';
+  d.style.background = s.bg;
+  if (s.fn) d.onclick = s.fn;
+  d.innerHTML = `<div class="sq-inner">
+    <div class="sq-icon">${s.icon}</div>
+    <div class="sq-title">${s.title.replace('\n','<br>')}</div>
+    <div class="sq-sub">${s.sub}</div>
+  </div>`;
+  document.getElementById('row-songs').appendChild(d);
+});
+
+/* ── REASONS ROW ────────────────────────────────── */
+[
+  'Your smile ✨','The way you laugh 😊','How deeply you care 💗',
+  'Your strength every day 💪','Your kindness 🌸',
+  'The way you say my name 🌊','Every little thing you do 🌟',
+  'You make home a feeling 🏡','Your hugs fix everything 🤗',
+  'Sruuu being Sruuu 💕','Your eyes when you\'re happy 🌟',
+  'You chose me, I choose you 🔁',
+].forEach(r => {
+  const d = document.createElement('div');
+  d.className = 'rpill'; d.textContent = r;
+  document.getElementById('row-reasons').appendChild(d);
+});
+
+/* ── POEM STARS ─────────────────────────────────── */
+const starsEl = document.getElementById('poem-stars');
+for (let i = 0; i < 160; i++) {
+  const s = document.createElement('div');
+  s.className = 'pstar';
+  const sz = (Math.random() * 2.2 + 0.4).toFixed(1);
+  s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*3+2).toFixed(1)}s;--dl:-${(Math.random()*6).toFixed(1)}s;`;
+  starsEl.appendChild(s);
+}
+
+/* ── FLOATING HEARTS ────────────────────────────── */
+const floatsEl = document.getElementById('poem-floats');
+['❤️','🌹','💕','✨','💗','🌸','💖','🌙'].forEach((em, i) => {
+  const h = document.createElement('div');
+  h.className = 'pheart';
+  h.textContent = em;
+  const sz = Math.round(Math.random() * 16 + 9);
+  h.style.cssText = `left:${Math.random()*100}%;--s:${sz}px;--d:${(Math.random()*9+7).toFixed(1)}s;--dl:${(Math.random()*14).toFixed(1)}s;`;
+  floatsEl.appendChild(h);
+  // second copy at different position
+  const h2 = h.cloneNode(true);
+  h2.style.left = Math.random()*100 + '%';
+  h2.style.setProperty('--dl', (Math.random()*14).toFixed(1)+'s');
+  floatsEl.appendChild(h2);
+});
+</script>
+</body>
+</html>
