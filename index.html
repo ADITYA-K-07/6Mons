@@ -419,6 +419,53 @@
       pointer-events: none;
     }
 
+    .hero-media {
+      overflow: hidden;
+    }
+
+    .hero-video-wrap {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(64vw, 1120px);
+      height: 100%;
+      overflow: hidden;
+      opacity: 0.92;
+      mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0.18) 72%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0.18) 72%, transparent 100%);
+    }
+
+    .hero-video-wrap::before,
+    .hero-video-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .hero-video-wrap::before {
+      background:
+        radial-gradient(circle at 24% 34%, rgba(124, 19, 255, 0.14), transparent 24%),
+        linear-gradient(to left, rgba(8, 4, 18, 0.02) 0%, rgba(8, 4, 18, 0.16) 32%, rgba(8, 4, 18, 0.54) 100%);
+      mix-blend-mode: screen;
+    }
+
+    .hero-video-wrap::after {
+      background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent 20%, transparent 78%, rgba(0, 0, 0, 0.68) 100%),
+        linear-gradient(to left, transparent 0%, rgba(0, 0, 0, 0.1) 28%, rgba(0, 0, 0, 0.48) 100%);
+    }
+
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 40% center;
+      display: block;
+      filter: saturate(0.96) contrast(1.02) brightness(0.76);
+      transform: scale(1.04);
+    }
+
     .hero-grain {
       background-image:
         linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
@@ -637,6 +684,17 @@
       display: none;
     }
 
+    .gallery-stack {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      padding-top: 10px;
+    }
+
+    .gallery-stack .landscape-card {
+      width: 100%;
+    }
+
     .nf-card {
       position: relative;
       flex: 0 0 auto;
@@ -673,6 +731,11 @@
     .landscape-card {
       width: 220px;
       aspect-ratio: 16 / 9;
+    }
+
+    .portrait-card {
+      width: 100%;
+      aspect-ratio: 4 / 5;
     }
 
     .square-card {
@@ -1124,6 +1187,11 @@
         padding-bottom: 56px;
       }
 
+      .hero-video-wrap {
+        width: 68vw;
+        opacity: 0.74;
+      }
+
       .browse-content {
         margin-top: 0;
       }
@@ -1166,6 +1234,13 @@
 
       .hero-title {
         line-height: 0.98;
+      }
+
+      .hero-video-wrap {
+        width: 100%;
+        opacity: 0.42;
+        mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0.18) 70%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0.18) 70%, transparent 100%);
       }
 
       .hero-meta {
@@ -1247,6 +1322,9 @@
         <div class="hero-orb three"></div>
       </div>
       <div class="hero-media" aria-hidden="true">
+        <div class="hero-video-wrap">
+          <video class="hero-video" src="assest/background.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        </div>
         <!-- ADD YOUR PHOTO: uncomment and set src below -->
         <!-- <img src="cover.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.5;"> -->
       </div>
@@ -1288,10 +1366,10 @@
 
       <section class="row-section">
         <div class="row-head">
-          <h2 class="row-title">🎵 Our Soundtrack</h2>
+          <h2 class="row-title">📷 Akho Akho ka Masla</h2>
           <span class="row-explore">Explore All ›</span>
         </div>
-        <div class="cards-row hide-scrollbar" id="soundtrack-row"></div>
+        <div class="gallery-stack" id="gallery-stack"></div>
       </section>
 
       <section class="row-section">
@@ -1370,28 +1448,28 @@
 
     // To add photos: change photo: null to photo: 'assest/filename.jpg'
     const profiles = [
-      { label: '1 Month', photo: 'assest/1st_Picture.jpeg' },
-      { label: '3 Months ✨', photo: 'assest/3_Months.jpeg' },
-      { label: '5 Months', photo: 'assest/5_Months.jpeg' },
-      { label: '6 Months ✨', photo: 'assest/6_Months.jpeg', hot: true }
+      { label: '1 Month', photo: 'assest/1st_Picture.jpeg', position: '50% 64%' },
+      { label: '3 Months ✨', photo: 'assest/3_Months.jpeg', position: '50% 36%' },
+      { label: '5 Months', photo: 'assest/5_Months.jpeg', position: '50% 42%' },
+      { label: '6 Months ✨', photo: 'assest/6_Months.jpeg', position: '50% 34%', hot: true }
     ];
 
     // Add your photos by setting photo to a filename in the assest folder.
     const popularItems = [
-      { title: 'Day I Falled 💫', photo: 'assest/Day_I_Falled.jpeg' },
-      { title: 'First Picture 🥰', photo: 'assest/1st_Picture.jpeg' },
-      { title: '1st Sunrise ☀️', photo: 'assest/1st_Sunrise.jpeg' },
+      { title: 'Day I Falled 💫', photo: 'assest/Day_I_Falled.jpeg', position: '50% 42%' },
+      { title: 'First Picture 🥰', photo: 'assest/1st_Picture.jpeg', position: '50% 60%' },
+      { title: '1st Sunrise ☀️', photo: 'assest/1st_Sunrise.jpeg', position: '50% 42%' },
       { title: '1st Reel 📸', video: 'assest/1st_reel.mp4' },
-      { title: 'Silly Us 😽', photo: 'assest/Silly_Us.jpeg' },
-      { title: '3 Months 🌸', photo: 'assest/3_Months.jpeg' },
-      { title: '5 Months 🌟', photo: 'assest/5_Months.jpeg' },
-      { title: '6 Months ❤️', photo: 'assest/6_Months.jpeg', featured: true }
+      { title: 'Silly Us 😽', photo: 'assest/Silly_Us.jpeg', position: '50% 38%' },
+      { title: '3 Months 🌸', photo: 'assest/3_Months.jpeg', position: '50% 36%' },
+      { title: '5 Months 🌟', photo: 'assest/5_Months.jpeg', position: '50% 42%' },
+      { title: '6 Months ❤️', photo: 'assest/6_Months.jpeg', position: '50% 34%', featured: true }
     ];
 
     const recentItems = [
-      { title: 'Late Night Talks 🌃', photo: 'assest/Late_Night_Talks.jpeg' },
-      { title: '1st Temple Ride', photo: 'assest/1st_Temple_Ride.jpeg' },
-      { title: 'Pookie Us 😘', photo: 'assest/Pookie_Us.jpeg' },
+      { title: 'Late Night Talks 🌃', photo: 'assest/Late_Night_Talks.jpeg', position: '50% 22%' },
+      { title: '1st Temple Ride', photo: 'assest/1st_Temple_Ride.jpeg', position: '50% 40%' },
+      { title: 'Pookie Us 😘', photo: 'assest/Pookie_Us.jpeg', position: '50% 40%' },
       { title: 'Ur Bday 🎉', video: 'assest/Ur_bday.mp4' },
       { title: 'Movie Night 💕', video: 'assest/Movie_Night.mp4' },
       { title: 'Desi Dance 🕺💃', video: 'assest/Desi_Dance.mp4' }
@@ -1403,36 +1481,44 @@
       file: null
     };
 
-    const soundtrackItems = [
-      {
-        icon: '🎵',
-        title: 'Dooron Dooron Unplugged',
-        subtitle: '♥ Our Song',
-        background: 'linear-gradient(135deg, #1a0000, #3d0000, #120000)',
-        action: 'sc-poem'
-      },
-      {
-        icon: '🎶',
-        title: 'Add a Song',
-        subtitle: 'Our playlist',
-        background: 'linear-gradient(135deg, #00101a, #003328)',
-        action: null
-      },
-      {
-        icon: '🎸',
-        title: 'Add a Song',
-        subtitle: 'Our playlist',
-        background: 'linear-gradient(135deg, #1a0800, #2b1600)',
-        action: null
-      },
-      {
-        icon: '🌙',
-        title: 'Add a Song',
-        subtitle: 'Our playlist',
-        background: 'linear-gradient(135deg, #080018, #160030)',
-        action: null
-      }
+    const galleryFiles = [
+      'What.jpeg',
+      'WhatsApp .jpeg',
+      'WhatsApp Ima.jpeg',
+      'WhatsApp Image 2.jpeg',
+      'WhatsApp Image 20.jpeg',
+      'WhatsApp Image 2026-.jpeg',
+      'WhatsApp Image 2026-05-.jpeg',
+      'WhatsApp Image 2026-05-24 at .jpeg',
+      'WhatsApp Image 2026-05-24 at 13..jpeg',
+      'WhatsApp Image 2026-05-24 at 13.1.jpeg',
+      'WhatsApp Image 2026-05-24 at 13.14..jpeg',
+      'WhatsApp Image 2026-05-24 at 13.14.36.jpeg',
+      'WhatsApp Image 2026-05-24 at 13.14.37.jpeg',
+      'WhatsApp Image 2026-05-24 at 13.14.38.jpeg',
+      'WhatsApp Image 2026-05-25.jpeg',
+      'WhatsApp Image 2026-05.jpeg',
+      'WhatsApp Video 2026-05-24 at 13.19.16.mp4',
+      'WhatsApp Video 2026-05-24 at 13.21.38.mp4',
+      'WhatsApp Video 2026-05-24 at 13.21.57.mp4',
+      'WhatsApp Video 2026-05-24 at 13.23.50.mp4'
     ];
+
+    const galleryItems = galleryFiles.map((file, index) => {
+      const isVideo = file.toLowerCase().endsWith('.mp4');
+      const item = {
+        title: `Akho Akho Moment ${String(index + 1).padStart(2, '0')}`,
+        subtitle: isVideo ? 'Video Memory' : 'Picture Gallery',
+        cardClass: 'portrait-card',
+        position: isVideo ? '50% 50%' : '50% 38%'
+      };
+      if (isVideo) {
+        item.video = `assest/extra/${file}`;
+      } else {
+        item.photo = `assest/extra/${file}`;
+      }
+      return item;
+    });
 
     const reasons = [
       'Your smile ✨',
@@ -1518,12 +1604,16 @@
       `;
     }
 
+    function mediaStyle(position) {
+      return position ? ` style="object-position:${position};"` : '';
+    }
+
     function renderCardMedia(item) {
       if (item.video) {
-        return `<video class="card-video" src="${item.video}" autoplay muted loop playsinline preload="metadata"></video>`;
+        return `<video class="card-video" src="${item.video}" autoplay muted loop playsinline preload="metadata"${mediaStyle(item.position)}></video>`;
       }
       if (item.photo) {
-        return `<img class="card-photo" src="${item.photo}" alt="${item.title}">`;
+        return `<img class="card-photo" src="${item.photo}" alt="${item.title}"${mediaStyle(item.position)}>`;
       }
       return createPlaceholder('Add Photo');
     }
@@ -1534,7 +1624,7 @@
       wrapper.className = `profile-card${profile.hot ? ' hot' : ''}`;
       wrapper.innerHTML = `
         <div class="profile-art">
-          ${profile.photo ? `<img class="profile-photo" src="${profile.photo}" alt="${profile.label}">` : createPlaceholder('Add Photo')}
+          ${profile.photo ? `<img class="profile-photo" src="${profile.photo}" alt="${profile.label}"${mediaStyle(profile.position)}>` : createPlaceholder('Add Photo')}
           <div class="profile-label">${profile.label}</div>
         </div>
         <div class="profile-name">${profile.label}</div>
@@ -1546,31 +1636,13 @@
     function createImageCard(item) {
       const card = document.createElement('button');
       card.type = 'button';
-      card.className = `nf-card landscape-card${item.featured ? ' featured' : ''}`;
+      card.className = `nf-card ${item.cardClass || 'landscape-card'}${item.featured ? ' featured' : ''}`;
       card.innerHTML = `
         <div class="card-shell">
           ${renderCardMedia(item)}
-          <div class="card-title">${item.title}</div>
+          <div class="card-title">${item.title}${item.subtitle ? `<span class="card-subtitle">${item.subtitle}</span>` : ''}</div>
         </div>
       `;
-      return card;
-    }
-
-    function createMusicCard(item) {
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'nf-card square-card music-card';
-      card.style.background = item.background;
-      card.innerHTML = `
-        <div class="music-icon">${item.icon}</div>
-        <div class="music-meta">
-          <span class="music-title">${item.title}</span>
-          <span class="music-subtitle">${item.subtitle}</span>
-        </div>
-      `;
-      if (item.action) {
-        card.addEventListener('click', () => go(item.action));
-      }
       return card;
     }
 
@@ -1595,12 +1667,12 @@
     function buildRows() {
       const popularRow = document.getElementById('popular-row');
       const recentRow = document.getElementById('recent-row');
-      const soundtrackRow = document.getElementById('soundtrack-row');
+      const galleryStack = document.getElementById('gallery-stack');
       const reasonsRow = document.getElementById('reasons-row');
 
       popularItems.forEach((item) => popularRow.appendChild(createImageCard(item)));
       recentItems.forEach((item) => recentRow.appendChild(createImageCard(item)));
-      soundtrackItems.forEach((item) => soundtrackRow.appendChild(createMusicCard(item)));
+      galleryItems.forEach((item) => galleryStack.appendChild(createImageCard(item)));
       reasons.forEach((item) => {
         const pill = document.createElement('div');
         pill.className = 'pill';
