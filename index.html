@@ -276,7 +276,8 @@
     }
 
     .profile-photo,
-    .card-photo {
+    .card-photo,
+    .card-video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -1252,11 +1253,11 @@
       <div class="hero-grain" aria-hidden="true"></div>
       <div class="hero-content" id="hero-content">
         <div class="eyebrow"><span class="nmark">N</span> Series</div>
-        <h1 class="hero-title">Life of<br><span class="accent">Aditya</span><br>&amp; Sruuu</h1>
+        <h1 class="hero-title">Life of<br><span class="accent">Aadii</span><br>&amp; Sruuu</h1>
         <div class="hero-meta">
           <span class="match">💕 100% Match</span>
           <span>2024</span>
-          <span class="badge">13+</span>
+          <span class="badge">18+</span>
           <span>6 Seasons</span>
           <span class="badge">HD</span>
         </div>
@@ -1350,26 +1351,14 @@
           <tr><td>Soundtrack</td><td id="credits-song">Dooron Dooron - Unplugged</td></tr>
           <tr><td>Director of Photography</td><td>Our camera rolls</td></tr>
           <tr><td>Location</td><td>Wherever we are together</td></tr>
-          <tr><td>Started</td><td>7th December 2024</td></tr>
+          <tr><td>Started</td><td>7th December 2025</td></tr>
           <tr><td>Status</td><td class="status-good">Ongoing · 6 months &amp; counting ❤️</td></tr>
         </table>
       </div>
     </div>
   </div>
 
-  <!--
-    HOW TO ADD PHOTOS:
-    1. Put image files in this same folder as index.html
-    2. In the arrays below, change photo: null to photo: 'filename.jpg'
-    3. Example:
-       { label: '1 Month', photo: 'month1.jpg' }
-       { title: 'Day We Met 💫', photo: 'daywemet.jpg' }
 
-    HOW TO ADD AUDIO:
-    1. Put the audio file in this same folder
-    2. Change soundtrack.file below from null to something like 'dooron-dooron.mp3'
-    3. The poem screen will try to play it automatically when opened
-  -->
   <audio id="soundtrack-player" preload="auto"></audio>
 
   <script>
@@ -1379,36 +1368,36 @@
     const browseScreen = document.getElementById('sc-browse');
     const heroContent = document.getElementById('hero-content');
 
-    // To add photos: change photo: null to photo: 'filename.jpg'
+    // To add photos: change photo: null to photo: 'assest/filename.jpg'
     const profiles = [
-      { label: '1 Month', photo: null },
-      { label: '3 Months', photo: null },
-      { label: '5 Months', photo: null },
-      { label: '6 Months ✨', photo: null, hot: true }
+      { label: '1 Month', photo: 'assest/1st_Picture.jpeg' },
+      { label: '3 Months ✨', photo: 'assest/3_Months.jpeg' },
+      { label: '5 Months', photo: 'assest/5_Months.jpeg' },
+      { label: '6 Months ✨', photo: 'assest/6_Months.jpeg', hot: true }
     ];
 
-    // Add your photos by setting photo to a filename in the same folder.
+    // Add your photos by setting photo to a filename in the assest folder.
     const popularItems = [
-      { title: 'Day We Met 💫', photo: null },
-      { title: 'First Smile 🥰', photo: null },
-      { title: '1 Month 🎉', photo: null },
-      { title: 'Adventures 🌍', photo: null },
-      { title: 'Silly Us 😂', photo: null },
-      { title: '3 Months 🌸', photo: null },
-      { title: '5 Months 🌟', photo: null },
-      { title: '6 Months ❤️', photo: null, featured: true }
+      { title: 'Day I Falled 💫', photo: 'assest/Day_I_Falled.jpeg' },
+      { title: 'First Picture 🥰', photo: 'assest/1st_Picture.jpeg' },
+      { title: '1st Sunrise ☀️', photo: 'assest/1st_Sunrise.jpeg' },
+      { title: '1st Reel 📸', video: 'assest/1st_reel.mp4' },
+      { title: 'Silly Us 😽', photo: 'assest/Silly_Us.jpeg' },
+      { title: '3 Months 🌸', photo: 'assest/3_Months.jpeg' },
+      { title: '5 Months 🌟', photo: 'assest/5_Months.jpeg' },
+      { title: '6 Months ❤️', photo: 'assest/6_Months.jpeg', featured: true }
     ];
 
     const recentItems = [
-      { title: 'Late Night Talks 🌃', photo: null },
-      { title: 'Coffee Date ☕', photo: null },
-      { title: 'A Night In 🌙', photo: null },
-      { title: 'Road Trip 🚗', photo: null },
-      { title: 'Just Us 💕', photo: null },
-      { title: 'Secret Moments 🤫', photo: null }
+      { title: 'Late Night Talks 🌃', photo: 'assest/Late_Night_Talks.jpeg' },
+      { title: '1st Temple Ride', photo: 'assest/1st_Temple_Ride.jpeg' },
+      { title: 'Pookie Us 😘', photo: 'assest/Pookie_Us.jpeg' },
+      { title: 'Ur Bday 🎉', video: 'assest/Ur_bday.mp4' },
+      { title: 'Movie Night 💕', video: 'assest/Movie_Night.mp4' },
+      { title: 'Desi Dance 🕺💃', video: 'assest/Desi_Dance.mp4' }
     ];
 
-    // To add music later, set file to your audio filename, for example: 'dooron-dooron.mp3'
+    // To add music later, set file to your audio filename, for example: 'assest/dooron-dooron.mp3'
     const soundtrack = {
       title: 'Dooron Dooron - Unplugged',
       file: null
@@ -1529,6 +1518,16 @@
       `;
     }
 
+    function renderCardMedia(item) {
+      if (item.video) {
+        return `<video class="card-video" src="${item.video}" autoplay muted loop playsinline preload="metadata"></video>`;
+      }
+      if (item.photo) {
+        return `<img class="card-photo" src="${item.photo}" alt="${item.title}">`;
+      }
+      return createPlaceholder('Add Photo');
+    }
+
     function createProfileCard(profile) {
       const wrapper = document.createElement('button');
       wrapper.type = 'button';
@@ -1550,7 +1549,7 @@
       card.className = `nf-card landscape-card${item.featured ? ' featured' : ''}`;
       card.innerHTML = `
         <div class="card-shell">
-          ${item.photo ? `<img class="card-photo" src="${item.photo}" alt="${item.title}">` : createPlaceholder('Add Photo')}
+          ${renderCardMedia(item)}
           <div class="card-title">${item.title}</div>
         </div>
       `;
